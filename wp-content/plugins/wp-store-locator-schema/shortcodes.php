@@ -7,7 +7,7 @@ function wpsl_store_schema()
     $storeName = get_the_title();
     $storeID = get_the_ID();
 
-    $storeType = 'ChildCare';
+    $storeType = get_option('wpsl-schema-store-type');
 
     $storeAddressLine1 = get_post_meta($storeID, 'wpsl_address');
     $storeAddressLine2 = get_post_meta($storeID, 'wpsl_adress2');
@@ -59,12 +59,12 @@ function wpsl_store_schema()
     };
 
     // Organization Info - Replace these with settings from the WP Admin
-    $organizationName = 'The Nest School';
-    $organizationType = 'EducationalOrganization';
-    $organizationURL = 'https://thenestschool.com/';
-    $organizationLogo = '';
-    $organizationImage = '';
-    $organizationDescription = 'At The Nest Schools Childcare Center, each day is a promise to our families. Our mission to build strong minds, healthy bodies, and happy kids is at the heart of every decision we make.';
+    $organizationName = get_option('wpsl-schema-org-name');
+    $organizationType = get_option('wpsl-schema-org-type');
+    $organizationURL = get_option('wpsl-schema-org-url');
+    $organizationLogo = get_option('wpsl-schema-org-logo');
+    $organizationImage = get_option('wpsl-schema-org-image');
+    $organizationDescription = get_option('wpsl-schema-org-desscription');
 
     // Output the Schema
     $output = '';
