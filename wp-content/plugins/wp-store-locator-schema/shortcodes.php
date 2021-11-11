@@ -3,9 +3,11 @@
 function wpsl_store_schema()
 {
     // Get store options from WP Store Locator
-    // Use get_post_meta and find the values in this file: wp-content/plugins/wp-store-locator/frontend/class-frontend.php, line 426 (fonted_meta_fields)
-    $storeName = '';
+    // Use get_post_meta and find the values in this file: wp-content/plugins/wp-store-locator/frontend/class-frontend.php, line 426 (fronted_meta_fields)
+    $storeName = get_the_title();
     $storeID = get_the_ID();
+
+    $storeType = 'ChildCare';
 
     $storeAddressLine1 = get_post_meta($storeID, 'wpsl_address');
     $storeAddressLine2 = get_post_meta($storeID, 'wpsl_adress2');
@@ -19,41 +21,96 @@ function wpsl_store_schema()
     $storeTel = get_post_meta($storeID, 'wpsl_phone');
     $storeEmail = get_post_meta($storeID, 'wpsl_email');
     $storeHours = get_post_meta($storeID, 'wpsl_hours');
-    $storeURL = get_post_meta($storeID, 'wpsl_url');
+    $storeURL = '';
 
-    print_r($storeAddressLine1[0]);
+    if (get_post_meta($storeID, 'wpsl_url')[0]) {
+        $storeURL = get_post_meta($storeID, 'wpsl_url')[0];
+    } else {
+        $storeURL = get_permalink();
+    };
 
-    // Below is a basic example of what is needed in the schema
+    $storeHoursSchema = [];
+    foreach($storeHours[0] as $day => $hours) {
+        // This is the Goal: ["Mo 10:00-19:00", "Sa 10:00-22:00", "Su 10:00-21:00"]
+        // Days are specified using the following two-letter combinations: Mo, Tu, We, Th, Fr, Sa, Su.
+        // Times are specified using 24:00 format. For example, 3pm is specified as 15:00, 10am as 10:00.
+        if($hours) {
+            if ($day === 'monday') {
+                $day = 'Mo';
+            } else if ($day === 'tuesday') {
+                $day = 'Tu';
+            } else if ($day === 'wednesday') {
+                $day = 'We';
+            } else if ($day === 'thursday') {
+                $day = 'Th';
+            } else if ($day === 'friday') {
+                $day = 'Fr';
+            } else if ($day === 'saturday') {
+                $day = 'Sa';
+            } else if ($day === 'sunday') {
+                $day = 'Su';
+            }
+            $arrayHours = explode(',', $hours[0]);
+            $openingTime = date("H:i", strtotime($arrayHours[0]));
+            $closingTime = date("H:i", strtotime($arrayHours[1]));
 
+            array_push($storeHoursSchema, $day . ' ' . $openingTime . '-' . $closingTime);
+        };
+    };
 
-    /*
-<script type="application/ld+json">
-    {
-        "@context": "https:\/\/schema.org",
-        "@type": "ChildCare",
-        "name": "Kids 'R' Kids",
-        "logo": "https:\/\/kidsrkids.com\/west-frisco\/wp-content\/uploads\/sites\/2\/2018\/12\/krk_logo.png",
-        "image": "https:\/\/kidsrkids.com\/west-frisco\/wp-content\/uploads\/sites\/2\/2018\/12\/krk_logo.png",
-        "url": "https:\/\/kidsrkids.com\/west-frisco",
-        "sameAs": [
-            "http:\/\/www.youtube.com\/user\/kidsrkidscorporate",
-            "http:\/\/www.facebook.com\/kidsrkidscorporate",
-            "http:\/\/www.twitter.com\/kidsrkidscorp",
-            "https:\/\/plus.google.com\/110315008907308268607\/",
-            "http:\/\/www.pinterest.com\/krkcorporate"
-        ],
-        "address": "2660 Main St  Frisco TX US 75033",
-        "email": "info@krkwestfrisco.com",
-        "telephone": "972-712-7332\t",
-        "awards": "Cognia, Best of Metroplex, Consumer Choice Award, Double Platinum Award, Texas School Ready",
-        "branchOf": {
-            "@type": "organization",
-            "name": "Kids 'R' Kids",
-            "address": "1625 Executive Drive South  Duluth GA  30096"
-        }
-    }
-</script>
-*/
+    // Organization Info - Replace these with settings from the WP Admin
+    $organizationName = 'The Nest School';
+    $organizationType = 'EducationalOrganization';
+    $organizationURL = 'https://thenestschool.com/';
+    $organizationLogo = '';
+    $organizationImage = '';
+    $organizationDescription = 'At The Nest Schools Childcare Center, each day is a promise to our families. Our mission to build strong minds, healthy bodies, and happy kids is at the heart of every decision we make.';
+
+    // Output the Schema
+    $output = '';
+
+    $output .= '<span>Schema</span><br />';
+
+    $output .= '<script type="application/ld+json">';
+        $output .= '{';
+            $output .= '"@context": "https://schema.org",';
+            $output .= '"@type": "' . $storeType . '",';
+            $output .= '"name": "' . $organizationName . ' - ' . $storeName . '",';
+            $output .= '"logo": "",';
+            $output .= '"image": "",';
+            $output .= '"url": "' . $storeURL . '",';
+            $output .= '"openingHours": ["' . implode("\", \"", $storeHoursSchema) . '"],';
+            $output .= '"sameAs": [';
+            $output .= '""';
+            $output .= '],';
+            $output .= '"address": {';
+                $output .= '"@type": "PostalAddress",';
+                $output .= '"addressLocality": "' . $storeCity[0] . '",';
+                $output .= '"addressRegion": "' . $storeState[0] . '",';
+                $output .= '"postalCode": "' . $storeZip[0] . '",';
+                $output .= '"streetAddress": "' . $storeAddressLine1[0] . ' ' . $storeAddressLine2[0] . '",';
+                $output .= '"addressCountry": "' . $storeCountry[0] . '"';
+            $output .= '},';
+            $output .= '"geo": {';
+                $output .= '"@type": "GeoCoordinates",';
+                $output .= '"latitude": "' . $storeLatitude[0] . '",';
+                $output .= '"longitude": "' . $storeLongitude[0] . '"';
+            $output .= '},';
+        $output .= '"email": "' . $storeEmail[0] . '",';
+        $output .= '"telephone": "' . $storeTel[0] . '",';
+            $output .= '"branchOf": {';
+                $output .= '  "@type": "' . $organizationType . '",';
+                $output .= '  "name": "' . $organizationName . '",';
+                $output .= '  "url": "' . $organizationURL . '",';
+                $output .= '  "logo": "'. $organizationLogo . '",';
+                $output .= '  "image": "' . $organizationImage . '",';
+                $output .= ' "description": "' . $organizationDescription . '"';
+                $output .= '}'; 
+            $output .= '}';
+        $output .= ' }';
+    $output .= '</script>';
+
+    return $output;
 };
 
 add_shortcode('wpsl_store_schema', 'wpsl_store_schema');

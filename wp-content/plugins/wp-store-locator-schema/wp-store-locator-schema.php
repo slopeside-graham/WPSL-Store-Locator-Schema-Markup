@@ -8,7 +8,7 @@ Version: 0.1
 */
 //phpinfo();
 
-const scriptver = '1.0.11-10-2021-1';  // Use this in register script calls to bypass cache.
+const scriptver = '1.0.11-11-2021-1';  // Use this in register script calls to bypass cache.
 
 // Include shortcodes
 include_once(plugin_dir_path(__FILE__) . 'shortcodes.php');
