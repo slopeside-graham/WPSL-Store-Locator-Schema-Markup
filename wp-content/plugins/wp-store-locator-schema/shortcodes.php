@@ -69,8 +69,6 @@ function wpsl_store_schema()
     // Output the Schema
     $output = '';
 
-    $output .= '<span>Schema</span><br />';
-
     $output .= '<script type="application/ld+json">';
         $output .= '{';
             $output .= '"@context": "https://schema.org",';
