@@ -4,7 +4,7 @@ Plugin Name: WP Store Locator - Schema Markup
 Description: Add Schema Markup Support to WP Store Locator
 Author: Graham Holland
 Author URI:
-Version: 0.1
+Version: 1.0
 */
 //phpinfo();
 
