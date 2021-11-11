@@ -1,7 +1,14 @@
 <?php
 /*
-Plugin Name: WP Store Locator
-Description: An easy to use location management system that enables users to search for nearby physical stores
-Author: Tijmen Smit
-Author URI: https://wpstorelocator.co/
-Version: 2.2.234
+Plugin Name: WP Store Locator - Schema Markup
+Description: Add Schema Markup Support to WP Store Locator
+Author: Graham Holland
+Author URI:
+Version: 0.1
+*/
+//phpinfo();
+
+const scriptver = '1.0.11-10-2021-1';  // Use this in register script calls to bypass cache.
+
+// Include shortcodes
+include_once(plugin_dir_path(__FILE__) . 'shortcodes.php');
