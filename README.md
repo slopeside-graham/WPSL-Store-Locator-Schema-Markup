@@ -1,2 +1,1 @@
-# WPSL Store Locator Schema Markup
-A WordPress plugin that adds Schema Markup to the WPSL Store Locator plugin
+WPSL Store Locator Schema Markup is a WordPress plugin designed to add functionality to an existing plugin (WPSL Store Locator). This plugin adds Schema Markup to WPSL Store Locator, which is essential for SEO.
